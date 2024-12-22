@@ -1,0 +1,79 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+
+void displayWord(const string& word, const vector<char>& guessedLetters) {
+    for (char c : word) {
+        if (find(guessedLetters.begin(), guessedLetters.end(), c) != guessedLetters.end()) {
+            cout << c << " ";
+        } else {
+            cout << "_ ";
+        }
+    }
+    cout << endl;
+}
+
+int main() {
+    
+    vector<string> words = {"apple", "banana", "orange", "grape", "mango","pakistan","india","china","america","march","april","may","june","july","august","september","oops"};
+    
+
+    srand(time(0)); 
+    string word = words[rand() % words.size()];
+    
+    vector<char> guessedLetters; 
+    int attempts = 6; 
+    
+    cout << "Welcome to Hangman!" << endl;
+    
+    while (attempts > 0) {
+        cout << "Word to guess: ";
+        displayWord(word, guessedLetters);
+        
+        cout << "Attempts remaining: " << attempts << endl;
+        cout << "Guess a letter: ";
+        
+        char guess;
+        cin >> guess;
+        
+       if (find(guessedLetters.begin(), guessedLetters.end(), guess) != guessedLetters.end()) {
+            cout << "You already guessed that letter!" << endl;
+            continue;
+        }
+        
+      
+        guessedLetters.push_back(guess);
+        
+        // Check if the letter is in the word
+        if (word.find(guess) == string::npos) {
+            attempts--; // Reduce attempts if letter is wrong
+            cout << "Wrong guess!" << endl;
+        } else {
+            cout << "Correct guess!" << endl;
+        }
+        
+        
+        bool wordGuessed = true;
+        for (char c : word) {
+            if (find(guessedLetters.begin(), guessedLetters.end(), c) == guessedLetters.end()) {
+                wordGuessed = false;
+                break;
+            }
+        }
+        
+        if (wordGuessed) {
+            cout << "Congratulations! You've guessed the word: " << word << endl;
+            break;
+        }
+    }
+    
+    if (attempts == 0) {
+        cout << "Game Over! The word was: " << word << endl;
+    }
+    
+    return 0;
+}
